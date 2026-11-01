@@ -1,0 +1,11 @@
+# Time blocks, inclusive, as year-month of the rebuilt call date.
+# Fixed on 1 Nov 2026 from the day-1 month counts, before any model was fitted.
+#
+# Rows per block: train 36,224; calibration 1,663; pilot 1,243; test 2,058.
+# The yes-rate rises from about 5% (2008) to about 50% (2010), so blocks are
+# never mixed at random.
+
+train: ["2008-05", "2009-05"]
+calibration: ["2009-06", "2009-08"]  # isotonic calibration of the demo scores
+pilot: ["2009-09", "2009-12"]        # demo metrics and example briefs
+test: ["2010-03", "2010-11"]         # untouched until hypotheses.md is committed

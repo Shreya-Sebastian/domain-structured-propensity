@@ -1,0 +1,84 @@
+{
+  "client_ref": "pilot-2009-10-38461",
+  "model": {
+    "name": "lgbm_factor_grouped",
+    "version": "0.1.0-demo",
+    "trained_on": "2008-05 to 2009-05",
+    "calibrated_on": "2009-06 to 2009-08"
+  },
+  "scored_at_block": "pilot",
+  "score": {
+    "probability_pct": 40,
+    "interval": null,
+    "rank_top_pct": 10,
+    "threshold_top_pct": 10,
+    "in_top": true
+  },
+  "abstain": false,
+  "base_logit": -2.87,
+  "factors": [
+    {
+      "id": "relationship",
+      "contribution": 1.237,
+      "features": {
+        "days_since_contact": 6.0,
+        "poutcome": "success"
+      },
+      "talking_point": true,
+      "context_only": false
+    },
+    {
+      "id": "market_context",
+      "contribution": 0.184,
+      "features": {
+        "emp.var.rate": -3.4,
+        "cons.conf.idx": -26.9
+      },
+      "talking_point": false,
+      "context_only": true
+    },
+    {
+      "id": "life_stage",
+      "contribution": 0.182,
+      "features": {
+        "age": 29,
+        "marital": "single"
+      },
+      "talking_point": false,
+      "context_only": false
+    },
+    {
+      "id": "reachability",
+      "contribution": 0.126,
+      "features": {
+        "contact": "cellular"
+      },
+      "talking_point": false,
+      "context_only": false
+    },
+    {
+      "id": "capacity",
+      "contribution": 0.019,
+      "features": {
+        "default": "no",
+        "housing": "yes"
+      },
+      "talking_point": true,
+      "context_only": false
+    }
+  ],
+  "check": {
+    "sum_of_factors_plus_base": -1.121657,
+    "model_logit": -1.121657,
+    "exact": true
+  },
+  "counterfactual": null,
+  "evidence": null,
+  "not_in_demo": [
+    "interval",
+    "abstain rule",
+    "counterfactual",
+    "evidence",
+    "directions"
+  ]
+}

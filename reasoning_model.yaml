@@ -1,0 +1,74 @@
+# The problem's reasoning model: which client facts belong to which factor.
+# Every model, test and explanation reads this file.
+#
+# Status: draft for the demo. Factor membership is set; no directions are
+# enforced yet. Directions are added in phase 0, each with a source, and only
+# from external evidence or the training months.
+
+version: "0.1-draft"
+
+factors:
+  capacity:
+    label: "Capacity to save"
+    features: [default, housing, loan]
+    directions: {}
+    evidence: moderate
+    sources: [toussaint-comeau-2021]
+    talking_point: true
+
+  relationship:
+    label: "Relationship and past response"
+    features: [poutcome, previous, contacted_before, days_since_contact]
+    directions: {}
+    evidence: moderate
+    sources: [moro-2014]
+    talking_point: true
+
+  market_context:
+    label: "Market context"
+    features: [emp.var.rate, cons.price.idx, cons.conf.idx, euribor3m, nr.employed]
+    directions: {}
+    evidence: moderate
+    sources: [moro-2014]
+    talking_point: false
+    context_only: true   # shown as context, never as a reason the client wants the product
+
+  reachability:
+    label: "Reachability"
+    features: [contact]
+    directions: {}
+    evidence: weak
+    sources: []
+    talking_point: false
+
+  life_stage:
+    label: "Life stage"
+    features: [age, job, marital, education]
+    directions: {}
+    evidence: weak
+    sources: []
+    sensitive: true
+    talking_point: false  # may be a model reason, never something to say to the client
+
+feature_labels:
+  default: "credit in default"
+  housing: "housing loan"
+  loan: "personal loan"
+  poutcome: "previous campaign outcome"
+  previous: "contacts before this campaign"
+  contacted_before: "contacted in an earlier campaign"
+  days_since_contact: "days since last contact"
+  emp.var.rate: "employment variation rate"
+  cons.price.idx: "consumer price index"
+  cons.conf.idx: "consumer confidence index"
+  euribor3m: "3-month Euribor"
+  nr.employed: "number employed (thousands)"
+  contact: "contact type"
+  age: "age"
+  job: "job"
+  marital: "marital status"
+  education: "education"
+
+sources:
+  moro-2014: "Moro, Cortez and Rita (2014). A data-driven approach to predict the success of bank telemarketing. Decision Support Systems 62, 22-31."
+  toussaint-comeau-2021: "Toussaint-Comeau (2021). Liquidity constraints and debts. Contemporary Economic Policy."

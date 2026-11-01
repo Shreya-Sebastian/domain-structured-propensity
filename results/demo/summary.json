@@ -1,0 +1,37 @@
+{
+  "label": "PILOT on validation months, not a result. Test block not scored.",
+  "block_counts": {
+    "train": 36224,
+    "calibration": 1663,
+    "pilot": 1243,
+    "test": 2058
+  },
+  "base_rates": {
+    "train": 0.0671,
+    "calibration": 0.3572,
+    "pilot": 0.436
+  },
+  "pilot_metrics": {
+    "unconstrained": {
+      "auc": 0.6062,
+      "average_precision": 0.547,
+      "precision_top10": 0.6694,
+      "trees": 300,
+      "trees_mixing_factors": 300
+    },
+    "structured": {
+      "auc": 0.6268,
+      "average_precision": 0.5926,
+      "precision_top10": 0.7177,
+      "trees": 300,
+      "trees_mixing_factors": 0
+    }
+  },
+  "checks": {
+    "banned_fields_absent": true,
+    "structured_trees_mixing_factors": 0,
+    "unconstrained_trees_mixing_factors": 300,
+    "max_abs_gap_factor_sum_vs_score": 8.881784197001252e-15,
+    "all_records_exact": true
+  }
+}
