@@ -1,35 +1,48 @@
 # The problem's reasoning model: which client facts belong to which factor.
 # Every model, test and explanation reads this file.
 #
-# Status: draft for the demo. Factor membership is set; no directions are
-# enforced yet. Directions are added in phase 0, each with a source, and only
-# from external evidence or the training months.
+# Directions are enforced only where an external source supports them. Sources
+# from this bank's own data (Moro et al.) do not count as external, because
+# their data overlaps the UCI file. Phase 0 (1 Nov 2026) found support for one
+# direction only; the evidence for each factor is summarised in
+# docs/phase0_evidence.md.
 
-version: "0.1-draft"
+version: "0.2"
 
 factors:
   capacity:
     label: "Capacity to save"
     features: [default, housing, loan]
     directions: {}
-    evidence: moderate
-    sources: [toussaint-comeau-2021]
+    # No direction: mortgage holders in Portugal are better-off on average,
+    # indebted Portuguese households still hold ample liquid assets, and
+    # "default = yes" has 3 clients in training.
+    evidence: weak
+    sources: [costa-farinha-2012, ampudia-2016]
     talking_point: true
 
   relationship:
     label: "Relationship and past response"
-    features: [poutcome, previous, contacted_before, days_since_contact]
-    directions: {}
+    features: [prev_success, previous, contacted_before, days_since_contact]
+    directions:
+      prev_success: increasing   # past response predicts future response (RFM, donor data)
+    # No direction for recency or number of contacts: recency of contact is not
+    # recency of purchase, response recency has an inverted-U effect, and
+    # contact counts lower response while purchase counts raise it.
     evidence: moderate
-    sources: [moro-2014]
+    sources: [viaene-2001, van-diepen-2009, fader-2005]
     talking_point: true
 
   market_context:
     label: "Market context"
     features: [emp.var.rate, cons.price.idx, cons.conf.idx, euribor3m, nr.employed]
     directions: {}
-    evidence: moderate
-    sources: [moro-2014]
+    # No direction: theory says lower rates move savers out of term deposits,
+    # this bank's data says the opposite, and Portuguese deposit rates stopped
+    # tracking Euribor from 2008. The indicators also proxy the bank's own
+    # offers and campaign strategy over time.
+    evidence: contradictory
+    sources: [drechsler-2017, stinglhamber-2011, esteves-pinheiro-2020, mody-2012]
     talking_point: false
     context_only: true   # shown as context, never as a reason the client wants the product
 
@@ -37,7 +50,7 @@ factors:
     label: "Reachability"
     features: [contact]
     directions: {}
-    evidence: weak
+    evidence: weak       # only US survey-cooperation evidence, which does not transfer
     sources: []
     talking_point: false
 
@@ -54,7 +67,7 @@ feature_labels:
   default: "credit in default"
   housing: "housing loan"
   loan: "personal loan"
-  poutcome: "previous campaign outcome"
+  prev_success: "previous campaign successful"
   previous: "contacts before this campaign"
   contacted_before: "contacted in an earlier campaign"
   days_since_contact: "days since last contact"
@@ -69,6 +82,17 @@ feature_labels:
   marital: "marital status"
   education: "education"
 
+# 0/1 features shown as no/yes in briefs.
+flag_features: [prev_success, contacted_before]
+
 sources:
-  moro-2014: "Moro, Cortez and Rita (2014). A data-driven approach to predict the success of bank telemarketing. Decision Support Systems 62, 22-31."
-  toussaint-comeau-2021: "Toussaint-Comeau (2021). Liquidity constraints and debts. Contemporary Economic Policy."
+  moro-2014: "Moro, Cortez and Rita (2014). A data-driven approach to predict the success of bank telemarketing. Decision Support Systems 62, 22-31. Same bank's data: not an external source for directions."
+  viaene-2001: "Viaene et al. (2001). Knowledge discovery in a direct marketing case using least squares support vector machines. International Journal of Intelligent Systems 16, 1023-1036."
+  van-diepen-2009: "van Diepen, Donkers and Franses (2009). Dynamic and competitive effects of direct mailings. Journal of Marketing Research 46(1), 120-133."
+  fader-2005: "Fader, Hardie and Lee (2005). RFM and CLV: using iso-value curves for customer base analysis. Journal of Marketing Research 42(4), 415-430."
+  costa-farinha-2012: "Costa and Farinha (2012). Inquerito a Situacao Financeira das Familias: metodologia e principais resultados. Banco de Portugal Occasional Paper 1/2012."
+  ampudia-2016: "Ampudia, van Vlokhoven and Zochowski (2016). Financial fragility of euro area households. Journal of Financial Stability 27 (ECB WP 1737)."
+  drechsler-2017: "Drechsler, Savov and Schnabl (2017). The deposits channel of monetary policy. Quarterly Journal of Economics 132(4)."
+  stinglhamber-2011: "Stinglhamber, Van Nieuwenhuyze and Zachary (2011). The impact of low interest rates on household financial behaviour. NBB Economic Review, September 2011."
+  esteves-pinheiro-2020: "Esteves and Pinheiro (2020). The capital surcharge on banks offering 'superdeposits'. Banco de Portugal Economic Studies."
+  mody-2012: "Mody, Ohnsorge and Sandri (2012). Precautionary savings in the Great Recession. IMF Working Paper 12/42."

@@ -18,6 +18,8 @@ def main():
     out = demo.run()
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "records").mkdir(exist_ok=True)
+    for old in (OUT / "records").glob("pilot-*.json"):
+        old.unlink()  # examples are chosen by rule; drop ones from earlier runs
 
     with open(OUT / "records" / "pilot_records.jsonl", "w") as fh:
         for r in out["records"]:

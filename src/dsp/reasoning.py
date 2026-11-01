@@ -12,6 +12,25 @@ class ReasoningModel:
     factors: dict          # factor id -> spec from the yaml
     feature_labels: dict
     sources: dict
+    flag_features: tuple = ()
+
+    @property
+    def directions(self) -> dict:
+        """feature -> 'increasing' | 'decreasing', over all factors."""
+        return {f: d for spec in self.factors.values() for f, d in spec.get("directions", {}).items()}
+
+    def monotone_vector(self, columns) -> list:
+        """LightGBM monotone_constraints: +1, -1 or 0 per column."""
+        sign = {"increasing": 1, "decreasing": -1}
+        return [sign.get(self.directions.get(c), 0) for c in columns]
+
+    def factor_pairs(self, columns) -> list:
+        """All feature pairs inside each factor, for a factor-grouped EBM."""
+        pairs = []
+        for spec in self.factors.values():
+            fs = [f for f in spec["features"] if f in columns]
+            pairs += [(a, b) for i, a in enumerate(fs) for b in fs[i + 1:]]
+        return pairs
 
     @property
     def feature_to_factor(self) -> dict:
@@ -49,4 +68,5 @@ class ReasoningModel:
 
 def load(path: Path = REASONING_PATH) -> ReasoningModel:
     raw = yaml.safe_load(path.read_text())
-    return ReasoningModel(raw["factors"], raw["feature_labels"], raw["sources"])
+    return ReasoningModel(raw["factors"], raw["feature_labels"], raw["sources"],
+                          tuple(raw.get("flag_features", ())))

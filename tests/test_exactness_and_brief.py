@@ -14,9 +14,25 @@ def test_unconstrained_trees_do_mix_factors(demo_out):
     assert demo_out["checks"]["unconstrained_trees_mixing_factors"] > 0
 
 
-def test_factor_contributions_sum_exactly_to_the_score(demo_out):
-    assert demo_out["checks"]["max_abs_gap_factor_sum_vs_score"] < 1e-6
-    assert demo_out["checks"]["all_records_exact"]
+def test_sanity_factor_shares_add_up_to_the_score(demo_out):
+    # True for any tree model (TreeSHAP); a sanity check, not the benefit.
+    assert demo_out["checks"]["sanity_max_abs_gap_factor_sum_vs_score"] < 1e-6
+    assert demo_out["checks"]["sanity_all_records_add_up"]
+
+
+def test_structured_model_is_separable_by_factor(demo_out):
+    # Changing one factor's facts never moves another factor's share.
+    for factor, r in demo_out["checks"]["separation_structured"].items():
+        assert r["share_with_other_factors_moved"] == 0, factor
+        assert r["max_other_factor_move"] <= 1e-9, factor
+
+
+def test_unconstrained_model_is_not_separable(demo_out):
+    # Shows the separation test can fail: interactions cross factors.
+    moved = [r["share_with_other_factors_moved"]
+             for r in demo_out["checks"]["separation_unconstrained"].values()
+             if r["max_own_factor_move"] > 0]
+    assert max(moved) > 0.5
 
 
 def _numbers(text):

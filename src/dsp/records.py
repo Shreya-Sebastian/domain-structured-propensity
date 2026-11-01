@@ -1,9 +1,16 @@
-"""Exact factor contributions and decision records.
+"""Factor contributions and decision records.
 
-If every tree splits on features from one factor only, the model's raw score
-is a sum of one function per factor. The per-feature contributions LightGBM
-returns (TreeSHAP) then add up, within each factor, to that factor's exact
-share of the score relative to the average training client.
+LightGBM's per-feature contributions (TreeSHAP) always add up to the raw
+score, for any tree model, so summing them per factor always adds up too:
+that is only a sanity check.
+
+What factor grouping adds is separation. If every tree splits on features
+from one factor only, the raw score is a sum of one function per factor,
+score = f_1(x_1) + ... + f_5(x_5), and each factor's share is that factor's
+own function (relative to the average training client). Changing one
+factor's facts can then never move another factor's share. In an
+unconstrained model, interactions spread across factors, so changing age can
+move the relationship share. `separation_test` checks this.
 """
 import math
 
@@ -23,6 +30,33 @@ def factor_contributions(model, X, reasoning):
         {fid: features[spec["features"]].sum(axis=1) for fid, spec in reasoning.factors.items()}
     )
     return factors, features, base, raw
+
+
+def separation_test(model, X, reasoning, seed=0, tol=1e-9) -> dict:
+    """For each factor, shuffle that factor's features across clients and
+    count clients whose OTHER factors' shares move. A separable model moves
+    none. Only clients whose own factor values actually changed are counted."""
+    rng = np.random.default_rng(seed)
+    before, *_ = factor_contributions(model, X, reasoning)
+    out = {}
+    for fid, spec in reasoning.factors.items():
+        cols = spec["features"]
+        Xp = X.copy()
+        Xp[cols] = X[cols].iloc[rng.permutation(len(X))].reset_index(drop=True)
+        same = (Xp[cols].astype(object) == X[cols].astype(object)) | (Xp[cols].isna() & X[cols].isna())
+        changed = ~same.all(axis=1).to_numpy()
+        after, *_ = factor_contributions(model, Xp, reasoning)
+        others = [k for k in reasoning.factors if k != fid]
+        move = np.abs(after[others].to_numpy() - before[others].to_numpy())[changed]
+        own = np.abs(after[fid].to_numpy() - before[fid].to_numpy())[changed]
+        out[fid] = {
+            "clients_changed": int(changed.sum()),
+            "share_with_other_factors_moved": round(float((move > tol).any(axis=1).mean()), 4),
+            "max_other_factor_move": float(move.max()) if len(move) else 0.0,
+            # If the factor's own share never moves, the shuffle tested nothing.
+            "max_own_factor_move": float(own.max()) if len(own) else 0.0,
+        }
+    return out
 
 
 def _plain(value):

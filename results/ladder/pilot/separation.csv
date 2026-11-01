@@ -1,0 +1,16 @@
+model,shuffled_factor,clients_changed,share_with_other_factors_moved,max_other_factor_move,max_own_factor_move,informative
+lgbm_unconstrained,capacity,817,1.0,0.4560994957106531,0.38240549545879493,True
+lgbm_unconstrained,relationship,826,0.9976,0.5423272667795036,1.5580233902737426,True
+lgbm_unconstrained,market_context,1198,0.0,0.0,0.0,False
+lgbm_unconstrained,reachability,264,1.0,0.46407850233070713,0.7689437708745843,True
+lgbm_unconstrained,life_stage,1239,0.9992,1.219184834143951,1.393123116560453,True
+lgbm_directions,capacity,817,1.0,0.39583099459498183,0.3841043407155289,True
+lgbm_directions,relationship,826,0.9964,0.6130578403714878,1.8109976486396946,True
+lgbm_directions,market_context,1198,0.0,0.0,0.0,False
+lgbm_directions,reachability,264,1.0,0.48606502338078006,0.7886935687802357,True
+lgbm_directions,life_stage,1239,1.0,0.986596572620979,1.2697418939142537,True
+lgbm_structured,capacity,817,0.0,0.0,0.23612915747419955,True
+lgbm_structured,relationship,826,0.0,0.0,2.266996528331922,True
+lgbm_structured,market_context,1198,0.0,0.0,0.0,False
+lgbm_structured,reachability,264,0.0,0.0,0.32591452328278636,True
+lgbm_structured,life_stage,1239,0.0,0.0,1.8541403426758867,True

@@ -1,0 +1,13 @@
+model,feature,direction,clients,grid_points,violation_share,mean_change,min_change
+logistic,prev_success,increasing,560,2,1.0,-0.2202,-0.2202
+lgbm_unconstrained,prev_success,increasing,560,2,0.0,0.1841,0.1113
+lgbm_directions,prev_success,increasing,560,2,0.0,0.1692,0.1477
+lgbm_structured,prev_success,increasing,560,2,0.0,0.3855,0.3016
+ebm_unconstrained,prev_success,increasing,560,2,0.0,0.6324,0.6324
+ebm_structured,prev_success,increasing,560,2,0.0,0.8071,0.6014
+logistic,prev_success (with contact date),increasing,560,2,1.0,-0.2202,-0.2202
+lgbm_unconstrained,prev_success (with contact date),increasing,560,2,0.0,0.1921,0.1619
+lgbm_directions,prev_success (with contact date),increasing,560,2,0.0,0.1692,0.1477
+lgbm_structured,prev_success (with contact date),increasing,560,2,0.0,0.3788,0.3016
+ebm_unconstrained,prev_success (with contact date),increasing,560,2,0.0,0.6324,0.6324
+ebm_structured,prev_success (with contact date),increasing,560,2,0.0,0.875,0.6014

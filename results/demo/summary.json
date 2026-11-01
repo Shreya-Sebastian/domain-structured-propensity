@@ -13,16 +13,16 @@
   },
   "pilot_metrics": {
     "unconstrained": {
-      "auc": 0.6062,
-      "average_precision": 0.547,
+      "auc": 0.6053,
+      "average_precision": 0.5492,
       "precision_top10": 0.6694,
       "trees": 300,
       "trees_mixing_factors": 300
     },
     "structured": {
-      "auc": 0.6268,
-      "average_precision": 0.5926,
-      "precision_top10": 0.7177,
+      "auc": 0.6285,
+      "average_precision": 0.5902,
+      "precision_top10": 0.7419,
       "trees": 300,
       "trees_mixing_factors": 0
     }
@@ -31,7 +31,71 @@
     "banned_fields_absent": true,
     "structured_trees_mixing_factors": 0,
     "unconstrained_trees_mixing_factors": 300,
-    "max_abs_gap_factor_sum_vs_score": 8.881784197001252e-15,
-    "all_records_exact": true
+    "separation_structured": {
+      "capacity": {
+        "clients_changed": 817,
+        "share_with_other_factors_moved": 0.0,
+        "max_other_factor_move": 0.0,
+        "max_own_factor_move": 0.23612915747419955
+      },
+      "relationship": {
+        "clients_changed": 826,
+        "share_with_other_factors_moved": 0.0,
+        "max_other_factor_move": 0.0,
+        "max_own_factor_move": 2.266996528331922
+      },
+      "market_context": {
+        "clients_changed": 1198,
+        "share_with_other_factors_moved": 0.0,
+        "max_other_factor_move": 0.0,
+        "max_own_factor_move": 0.0
+      },
+      "reachability": {
+        "clients_changed": 264,
+        "share_with_other_factors_moved": 0.0,
+        "max_other_factor_move": 0.0,
+        "max_own_factor_move": 0.32591452328278636
+      },
+      "life_stage": {
+        "clients_changed": 1239,
+        "share_with_other_factors_moved": 0.0,
+        "max_other_factor_move": 0.0,
+        "max_own_factor_move": 1.8541403426758867
+      }
+    },
+    "separation_unconstrained": {
+      "capacity": {
+        "clients_changed": 817,
+        "share_with_other_factors_moved": 1.0,
+        "max_other_factor_move": 0.4560994957106531,
+        "max_own_factor_move": 0.38240549545879493
+      },
+      "relationship": {
+        "clients_changed": 826,
+        "share_with_other_factors_moved": 0.9976,
+        "max_other_factor_move": 0.5423272667795036,
+        "max_own_factor_move": 1.5580233902737426
+      },
+      "market_context": {
+        "clients_changed": 1198,
+        "share_with_other_factors_moved": 0.0,
+        "max_other_factor_move": 0.0,
+        "max_own_factor_move": 0.0
+      },
+      "reachability": {
+        "clients_changed": 264,
+        "share_with_other_factors_moved": 1.0,
+        "max_other_factor_move": 0.46407850233070713,
+        "max_own_factor_move": 0.7689437708745843
+      },
+      "life_stage": {
+        "clients_changed": 1239,
+        "share_with_other_factors_moved": 0.9992,
+        "max_other_factor_move": 1.219184834143951,
+        "max_own_factor_move": 1.393123116560453
+      }
+    },
+    "sanity_max_abs_gap_factor_sum_vs_score": 7.105427357601002e-15,
+    "sanity_all_records_add_up": true
   }
 }

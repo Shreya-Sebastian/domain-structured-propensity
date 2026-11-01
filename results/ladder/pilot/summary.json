@@ -1,0 +1,24 @@
+{
+  "block": "pilot",
+  "rows": 1243,
+  "yes_rate": 0.436,
+  "directions": {
+    "prev_success": "increasing"
+  },
+  "trees_mixing_factors": {
+    "lgbm_unconstrained": 300,
+    "lgbm_directions": 300,
+    "lgbm_structured": 0
+  },
+  "sanity_max_abs_gap_factor_sum_vs_score": 7.105427357601002e-15,
+  "fit_seconds": {
+    "rule_baseline": 0.0,
+    "logistic": 0.2,
+    "lgbm_unconstrained": 0.7,
+    "lgbm_directions": 0.7,
+    "lgbm_structured": 0.7,
+    "ebm_unconstrained": 22.6,
+    "ebm_structured": 11.7,
+    "stability": 62.3
+  }
+}

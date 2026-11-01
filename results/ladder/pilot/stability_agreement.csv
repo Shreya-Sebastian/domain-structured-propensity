@@ -1,0 +1,11 @@
+model,level,mean_top1_agreement
+lgbm_structured,factor,0.8184
+lgbm_structured,feature,0.7125
+lgbm_unconstrained,factor,0.6757
+lgbm_unconstrained,feature,0.5454
+lgbm_unconstrained,random_0,0.6268
+lgbm_unconstrained,random_1,0.6383
+lgbm_unconstrained,random_2,0.5989
+lgbm_unconstrained,random_3,0.6326
+lgbm_unconstrained,random_4,0.581
+lgbm_unconstrained,random_mean,0.6155

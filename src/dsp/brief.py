@@ -19,9 +19,12 @@ def _value(value) -> str:
 def _facts(factor, reasoning, informative_only=False) -> str:
     parts = []
     for name, value in factor["features"].items():
-        if informative_only and value in UNINFORMATIVE:
+        if informative_only and (value in UNINFORMATIVE
+                                 or (name in reasoning.flag_features and value == 0)):
             continue
         label = reasoning.feature_labels.get(name, name)
+        if name in reasoning.flag_features and value in (0, 1):
+            value = "yes" if value == 1 else "no"
         parts.append(f"{label} {_value(value)}")
     return ", ".join(parts)
 
@@ -81,9 +84,9 @@ def render(record, reasoning) -> str:
         lines.append("**What you could raise in the call:** no relationship or capacity facts stand out.")
 
     lines.append("")
-    lines.append(
-        "_The reasons describe the model, not the client's motives. Factor shares add up "
-        "exactly to the model's score for this client (check passed: "
-        f"{'yes' if record['check']['exact'] else 'NO'})._"
-    )
+    footer = "_The reasons describe the model, not the client's motives."
+    if record["model"].get("separable_by_factor"):
+        footer += (" In this model each factor's share depends only on that factor's own facts:"
+                   " changing one fact can only move its own factor's share.")
+    lines.append(footer + "_")
     return "\n".join(lines)

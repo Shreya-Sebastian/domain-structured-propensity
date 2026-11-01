@@ -1,4 +1,4 @@
-"""Demo pipeline: exact factor split plus advisor briefs.
+"""Demo pipeline: factor-separable model plus advisor briefs.
 
 Uses the train, calibration and pilot blocks only. The test block is never
 scored here.
@@ -28,7 +28,8 @@ def run():
 
     fitted = {
         "unconstrained": models.fit(Xtr, ytr),
-        "structured": models.fit(Xtr, ytr, rm.interaction_groups(X.columns)),
+        "structured": models.fit(Xtr, ytr, rm.interaction_groups(X.columns),
+                                 rm.monotone_vector(X.columns)),
     }
 
     cols = list(X.columns)
@@ -47,6 +48,10 @@ def run():
     iso = IsotonicRegression(out_of_bounds="clip", y_min=0, y_max=1)
     iso.fit(model.predict(Xcal, raw_score=True), ycal)
 
+    separation = {name: records.separation_test(m, Xpi, rm) for name, m in fitted.items()}
+    separable = all(r["share_with_other_factors_moved"] == 0
+                    for r in separation["structured"].values())
+
     factors, features, base, raw = records.factor_contributions(model, Xpi, rm)
     probability = iso.predict(raw)
     info = {
@@ -54,6 +59,7 @@ def run():
         "version": "0.1.0-demo",
         "trained_on": f"{blocks['train'][0]} to {blocks['train'][1]}",
         "calibrated_on": f"{blocks['calibration'][0]} to {blocks['calibration'][1]}",
+        "separable_by_factor": separable,
     }
     recs = records.build_records(Xpi, mpi, "pilot", factors, features, base, raw,
                                  probability, rm, info)
@@ -63,8 +69,12 @@ def run():
         "banned_fields_absent": not (set(X.columns) & set(data.BANNED)),
         "structured_trees_mixing_factors": pilot["structured"]["trees_mixing_factors"],
         "unconstrained_trees_mixing_factors": pilot["unconstrained"]["trees_mixing_factors"],
-        "max_abs_gap_factor_sum_vs_score": float(gap.max()),
-        "all_records_exact": all(r["check"]["exact"] for r in recs),
+        # Separation: the property factor grouping adds.
+        "separation_structured": separation["structured"],
+        "separation_unconstrained": separation["unconstrained"],
+        # Sanity only: TreeSHAP shares add up to the score for any tree model.
+        "sanity_max_abs_gap_factor_sum_vs_score": float(gap.max()),
+        "sanity_all_records_add_up": all(r["check"]["exact"] for r in recs),
     }
     counts = {name: int(m.sum()) for name, m in masks.items()}
     base_rates = {name: round(float(y[m].mean()), 4) for name, m in masks.items() if name != "test"}

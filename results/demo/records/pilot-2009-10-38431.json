@@ -1,45 +1,46 @@
 {
-  "client_ref": "pilot-2009-09-38135",
+  "client_ref": "pilot-2009-10-38431",
   "model": {
     "name": "lgbm_factor_grouped",
     "version": "0.1.0-demo",
     "trained_on": "2008-05 to 2009-05",
-    "calibrated_on": "2009-06 to 2009-08"
+    "calibrated_on": "2009-06 to 2009-08",
+    "separable_by_factor": true
   },
   "scored_at_block": "pilot",
   "score": {
-    "probability_pct": 32,
+    "probability_pct": 41,
     "interval": null,
-    "rank_top_pct": 51,
+    "rank_top_pct": 10,
     "threshold_top_pct": 10,
-    "in_top": false
+    "in_top": true
   },
   "abstain": false,
   "base_logit": -2.87,
   "factors": [
     {
-      "id": "life_stage",
-      "contribution": 0.232,
+      "id": "relationship",
+      "contribution": 1.248,
       "features": {
-        "age": 62,
-        "job": "self-employed"
+        "days_since_contact": 6.0,
+        "prev_success": 1
       },
-      "talking_point": false,
+      "talking_point": true,
       "context_only": false
     },
     {
       "id": "market_context",
-      "contribution": 0.184,
+      "contribution": 0.174,
       "features": {
         "emp.var.rate": -3.4,
-        "cons.conf.idx": -29.8
+        "cons.conf.idx": -26.9
       },
       "talking_point": false,
       "context_only": true
     },
     {
       "id": "reachability",
-      "contribution": 0.126,
+      "contribution": 0.129,
       "features": {
         "contact": "cellular"
       },
@@ -47,29 +48,29 @@
       "context_only": false
     },
     {
-      "id": "relationship",
-      "contribution": 0.027,
+      "id": "life_stage",
+      "contribution": 0.097,
       "features": {
-        "poutcome": "nonexistent",
-        "days_since_contact": null
+        "job": "retired",
+        "education": "professional.course"
       },
-      "talking_point": true,
+      "talking_point": false,
       "context_only": false
     },
     {
       "id": "capacity",
-      "contribution": -0.116,
+      "contribution": -0.032,
       "features": {
-        "default": "unknown",
-        "housing": "yes"
+        "housing": "unknown",
+        "default": "no"
       },
       "talking_point": true,
       "context_only": false
     }
   ],
   "check": {
-    "sum_of_factors_plus_base": -2.4172,
-    "model_logit": -2.4172,
+    "sum_of_factors_plus_base": -1.25449,
+    "model_logit": -1.25449,
     "exact": true
   },
   "counterfactual": null,

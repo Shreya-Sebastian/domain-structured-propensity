@@ -17,7 +17,7 @@ BANNED = ("duration", "campaign", "month", "day_of_week")
 MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
 FIRST_YEAR = 2008
 
-CATEGORICAL = ["job", "marital", "education", "default", "housing", "loan", "contact", "poutcome"]
+CATEGORICAL = ["job", "marital", "education", "default", "housing", "loan", "contact"]
 
 
 def load_raw(path: Path = RAW_PATH) -> pd.DataFrame:
@@ -56,6 +56,12 @@ def prepare(df: pd.DataFrame):
     X["contacted_before"] = (~never).astype(int)
     X["days_since_contact"] = X["pdays"].where(~never, np.nan)
     X = X.drop(columns=["pdays"])
+
+    # Previous campaign outcome as a flag, so a direction can be enforced on it
+    # (LightGBM cannot constrain a categorical feature). A failure is still
+    # visible as previous > 0 with prev_success = 0.
+    X["prev_success"] = (X["poutcome"] == "success").astype(int)
+    X = X.drop(columns=["poutcome"])
 
     # "unknown" stays its own category. Categories are fixed from the full file
     # so every block encodes them the same way.

@@ -1,0 +1,5 @@
+comparison,difference,ci_low,ci_high
+lgbm_structured:factor minus lgbm_structured:feature,0.1059,0.0972,0.115
+lgbm_unconstrained:factor minus lgbm_unconstrained:feature,0.1303,0.1242,0.1367
+lgbm_structured:factor minus lgbm_unconstrained:factor,0.1427,0.1318,0.1537
+lgbm_unconstrained:factor minus lgbm_unconstrained:random_mean,0.0602,0.0533,0.0671
