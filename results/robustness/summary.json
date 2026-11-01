@@ -1,0 +1,27 @@
+{
+  "seed_check_max_score_difference": 0.0,
+  "leaky_upper_bound_auc": 0.6344,
+  "correlation_groups": {
+    "corr_1": [
+      "housing",
+      "loan"
+    ],
+    "corr_2": [
+      "contact",
+      "previous",
+      "contacted_before",
+      "prev_success"
+    ],
+    "corr_3": [
+      "age",
+      "marital",
+      "education",
+      "default",
+      "days_since_contact"
+    ],
+    "corr_4": [
+      "job"
+    ]
+  },
+  "seconds": 756
+}

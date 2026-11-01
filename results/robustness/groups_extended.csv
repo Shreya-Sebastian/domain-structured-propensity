@@ -1,0 +1,7 @@
+model,age_band,clients,base_rate,selection_rate_top10,precision_in_top10,recall_in_top10
+lgbm_structured,under 30,495,0.4889,0.1152,0.5965,0.1405
+lgbm_structured,30 to 59,1218,0.5197,0.0583,0.7746,0.0869
+lgbm_structured,60 and over,345,0.5739,0.229,0.6835,0.2727
+lgbm_unconstrained,under 30,495,0.4889,0.0848,0.6429,0.1116
+lgbm_unconstrained,30 to 59,1218,0.5197,0.124,0.6887,0.1643
+lgbm_unconstrained,60 and over,345,0.5739,0.0377,0.6923,0.0455

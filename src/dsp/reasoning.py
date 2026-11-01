@@ -24,6 +24,20 @@ class ReasoningModel:
         sign = {"increasing": 1, "decreasing": -1}
         return [sign.get(self.directions.get(c), 0) for c in columns]
 
+    def restrict(self, columns) -> "ReasoningModel":
+        """The same reasoning model over a subset of columns; factors left
+        with no features are dropped. Used by robustness checks."""
+        cols = set(columns)
+        factors = {}
+        for fid, spec in self.factors.items():
+            feats = [f for f in spec["features"] if f in cols]
+            if feats:
+                new = dict(spec)
+                new["features"] = feats
+                new["directions"] = {f: d for f, d in spec.get("directions", {}).items() if f in cols}
+                factors[fid] = new
+        return ReasoningModel(factors, self.feature_labels, self.sources, self.flag_features)
+
     def factor_pairs(self, columns) -> list:
         """All feature pairs inside each factor, for a factor-grouped EBM."""
         pairs = []

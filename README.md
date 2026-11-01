@@ -13,6 +13,15 @@ A feasibility study on public bank data: what does it cost to make a propensity 
 - **Life stage is not needed:** dropping it raised AUC by +0.010 [+0.001, +0.020], and with it the structured model selected far more clients aged 60 and over (22.9% against 3.8%) at similar precision.
 - **Probabilities need recalibration** on recent months (ECE 0.06 to 0.18 for every model).
 
+## Decision audit and robustness (after the test run)
+
+Every design decision was checked against primary sources afterwards (`docs/robustness.md`): 27 of 47 supported, 18 partly, 2 wrong or unsupported. The checks are reported next to the pre-registered result, not in its place. The main changes to the story:
+
+- **Tuning matters.** Across 30 shared settings the structured model stayed between 0.628 and 0.651 AUC while the directions-only model ranged from 0.561 to 0.669; the best-tuned less constrained model beat the structured one by about 0.02. So structure costs little or nothing depending on tuning, and its clear benefit is much lower sensitivity to settings.
+- **`pdays = 999` does not mean never contacted** (4,110 counter-examples); `contacted_before` really means "has a recorded contact date". Fixing it changed no tree.
+- **Market context hurts:** every test client is outside its training range; without it the structured model reached 0.677.
+- **Dropping life stage** evens out selection by age.
+
 ## What the demo shows
 
 A gradient-boosted model (LightGBM) is fitted twice on the same data with the same settings:

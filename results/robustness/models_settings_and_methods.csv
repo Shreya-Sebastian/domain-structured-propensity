@@ -1,0 +1,13 @@
+variant,model,reference,auc_model,auc_reference,auc_diff,delong_ci
+pre-registered settings,lgbm_directions,lgbm_unconstrained,0.6397,0.6315,0.0082,"[0.0038, 0.0127]"
+pre-registered settings,lgbm_structured,lgbm_directions,0.6558,0.6397,0.0161,"[-0.0037, 0.0358]"
+pre-registered settings,lgbm_structured,lgbm_unconstrained,0.6558,0.6315,0.0243,"[0.0038, 0.0449]"
+LightGBM library defaults,lgbm_directions,lgbm_unconstrained,0.5833,0.584,-0.0007,"[-0.0083, 0.007]"
+LightGBM library defaults,lgbm_structured,lgbm_directions,0.6517,0.5833,0.0684,"[0.046, 0.0908]"
+LightGBM library defaults,lgbm_structured,lgbm_unconstrained,0.6517,0.584,0.0677,"[0.0442, 0.0912]"
+direction method: basic,lgbm_directions,lgbm_unconstrained,0.6318,0.6315,0.0003,"[-0.0046, 0.0052]"
+direction method: basic,lgbm_structured,lgbm_directions,0.6546,0.6318,0.0228,"[0.002, 0.0435]"
+direction method: basic,lgbm_structured,lgbm_unconstrained,0.6546,0.6315,0.0231,"[0.0025, 0.0436]"
+direction method: intermediate,lgbm_directions,lgbm_unconstrained,0.6397,0.6315,0.0082,"[0.0038, 0.0127]"
+direction method: intermediate,lgbm_structured,lgbm_directions,0.6558,0.6397,0.0161,"[-0.0037, 0.0358]"
+direction method: intermediate,lgbm_structured,lgbm_unconstrained,0.6558,0.6315,0.0243,"[0.0038, 0.0449]"

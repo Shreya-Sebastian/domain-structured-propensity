@@ -1,0 +1,4 @@
+model,best_pilot_auc,num_leaves,learning_rate,n_estimators,min_child_samples,reg_lambda
+lgbm_unconstrained,0.6326,15,0.065451381225836,100,200,1.0
+lgbm_directions,0.6412,15,0.065451381225836,100,200,1.0
+lgbm_structured,0.6339,31,0.0201727096517882,200,100,10.0

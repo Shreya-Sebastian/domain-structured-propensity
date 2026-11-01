@@ -1,0 +1,4 @@
+model,test_auc,test_precision_top10
+lgbm_unconstrained,0.6568,0.699
+lgbm_directions,0.6621,0.699
+lgbm_structured,0.6284,0.5728

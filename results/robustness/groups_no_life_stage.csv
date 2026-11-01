@@ -1,0 +1,4 @@
+model,age_band,clients,selection_rate_top10,precision_in_top10,recall_in_top10
+lgbm_structured_no_life_stage,under 30,495,0.097,0.625,0.124
+lgbm_structured_no_life_stage,30 to 59,1218,0.0928,0.7611,0.1359
+lgbm_structured_no_life_stage,60 and over,345,0.1304,0.6889,0.1566

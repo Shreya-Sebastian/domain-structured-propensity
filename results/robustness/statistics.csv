@@ -1,0 +1,4 @@
+model,reference,auc_diff,delong_se,delong_ci,delong_p,bca_10000_ci
+lgbm_directions,lgbm_unconstrained,0.0082,0.0023,"[0.0038, 0.0127]",0.0003,"[0.0039, 0.0128]"
+lgbm_structured,lgbm_directions,0.0161,0.0101,"[-0.0037, 0.0358]",0.1109,"[-0.0036, 0.0358]"
+lgbm_structured,lgbm_unconstrained,0.0243,0.0105,"[0.0038, 0.0449]",0.0204,"[0.0037, 0.0441]"

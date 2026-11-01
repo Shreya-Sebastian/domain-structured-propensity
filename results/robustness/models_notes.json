@@ -1,0 +1,17 @@
+{
+  "ebm_pairs_with_directed_feature": [
+    [
+      "prev_success",
+      "previous"
+    ],
+    [
+      "prev_success",
+      "contacted_before"
+    ],
+    [
+      "prev_success",
+      "days_since_contact"
+    ]
+  ],
+  "corr_prev_success_contacted_before_train": 0.9735
+}

@@ -44,17 +44,49 @@ def assert_no_banned(columns) -> None:
         raise ValueError(f"banned fields reached a model: {leaked}")
 
 
-def prepare(df: pd.DataFrame):
+MACRO = ["emp.var.rate", "cons.price.idx", "cons.conf.idx", "euribor3m", "nr.employed"]
+
+
+def lag_macro(df: pd.DataFrame) -> pd.DataFrame:
+    """Robustness check: replace each month's market indicators with the
+    previous recorded month's average, so no value can come from after the
+    first call. The first month keeps its own values."""
+    monthly = df.groupby("ym")[MACRO].mean().sort_index()
+    lagged = monthly.shift(1).fillna(monthly)
+    out = df.copy()
+    out[MACRO] = lagged.loc[out["ym"]].to_numpy()
+    return out
+
+
+def prepare(df: pd.DataFrame, contact_flag: str = "pdays", drop_duplicates: bool = False,
+            drop_features: tuple = (), lagged_macro: bool = False):
     """Return (X, y, meta). X holds model features only; meta keeps row_id and
-    ym for splitting and reporting."""
+    ym for splitting and reporting.
+
+    The defaults are the pre-registered design. The options exist only for the
+    post-hoc robustness checks in scripts/run_robustness.py."""
     if "ym" not in df:
         df = rebuild_dates(df)
+    if drop_duplicates:
+        df = df.drop_duplicates(subset=[c for c in df.columns if c not in ("row_id",)])
+    if lagged_macro:
+        df = lag_macro(df)
     X = df.drop(columns=["row_id", "ym", "y", *BANNED]).copy()
 
-    # pdays = 999 means never contacted before: split into a flag and a number.
-    never = X["pdays"] == 999
-    X["contacted_before"] = (~never).astype(int)
-    X["days_since_contact"] = X["pdays"].where(~never, np.nan)
+    # pdays = 999 means "no day count recorded". The documentation says it
+    # means never contacted, but 4,110 rows have 999 with earlier contacts and a
+    # failed outcome. Pre-registered design (contact_flag="pdays"): the flag
+    # is set when a day count exists, so `contacted_before` really means "has a
+    # recorded contact date". Robustness check (contact_flag="previous"): the
+    # flag is set when there were earlier contacts (previous > 0).
+    has_days = X["pdays"] != 999
+    if contact_flag == "pdays":
+        X["contacted_before"] = has_days.astype(int)
+    elif contact_flag == "previous":
+        X["contacted_before"] = (X["previous"] > 0).astype(int)
+    else:
+        raise ValueError(contact_flag)
+    X["days_since_contact"] = X["pdays"].where(has_days, np.nan)
     X = X.drop(columns=["pdays"])
 
     # Previous campaign outcome as a flag, so a direction can be enforced on it
@@ -66,7 +98,9 @@ def prepare(df: pd.DataFrame):
     # "unknown" stays its own category. Categories are fixed from the full file
     # so every block encodes them the same way.
     for col in CATEGORICAL:
-        X[col] = pd.Categorical(X[col], categories=sorted(df[col].unique()))
+        if col in X:
+            X[col] = pd.Categorical(X[col], categories=sorted(df[col].unique()))
+    X = X.drop(columns=list(drop_features))
 
     assert_no_banned(X.columns)
     y = (df["y"] == "yes").astype(int).to_numpy()

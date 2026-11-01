@@ -1,0 +1,14 @@
+model,level,mean_agreement
+lgbm_structured,factor,0.8103
+lgbm_structured,feature,0.6738
+lgbm_structured,factor_with_market,0.8069
+lgbm_structured,correlation,0.7273
+lgbm_unconstrained,factor,0.7189
+lgbm_unconstrained,feature,0.6134
+lgbm_unconstrained,factor_with_market,0.6837
+lgbm_unconstrained,correlation,0.6478
+lgbm_unconstrained,random (mean of 50),0.6754
+lgbm_unconstrained,random (range of 50),0.6277 to 0.7199
+lgbm_structured,"factor, smallest gap between top two factors",0.7261
+lgbm_structured,"factor, middle between top two factors",0.7401
+lgbm_structured,"factor, largest gap between top two factors",0.9648

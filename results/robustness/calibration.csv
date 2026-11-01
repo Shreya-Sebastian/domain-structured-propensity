@@ -1,0 +1,7 @@
+model,calibration,ece,ece_ci,brier,calibration_in_the_large,calibration_slope
+lgbm_structured,"isotonic, calibration block (pre-registered)",0.1522,"[0.1349, 0.1750]",0.261,0.1522,0.1968
+lgbm_structured,"Platt, calibration block",0.1528,"[0.1368, 0.1774]",0.26,0.1528,1.7458
+lgbm_structured,"Platt, refit on pilot block",0.0421,"[0.0342, 0.0698]",0.2341,-0.0062,0.7206
+lgbm_unconstrained,"isotonic, calibration block (pre-registered)",0.1787,"[0.1609, 0.2017]",0.2727,0.1787,0.1532
+lgbm_unconstrained,"Platt, calibration block",0.1774,"[0.1598, 0.2007]",0.2708,0.1774,1.5922
+lgbm_unconstrained,"Platt, refit on pilot block",0.0594,"[0.0481, 0.0867]",0.2404,0.0569,1.0338

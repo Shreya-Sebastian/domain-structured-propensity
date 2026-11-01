@@ -108,3 +108,58 @@ def summarise(agreement, n_boot=1000, seed=20261101):
     rows.append({"model": "lgbm_unconstrained", "level": "random_mean",
                  "mean_top1_agreement": round(float(random_mean.mean()), 4)})
     return pd.DataFrame(rows), pd.DataFrame(diffs)
+
+
+def correlation_partition(rm, Xtr, n_groups=None):
+    """Control: the reason features grouped by hierarchical clustering on
+    1 - |Spearman correlation| (categories as codes), into as many groups as
+    there are reason factors."""
+    from scipy.cluster.hierarchy import fcluster, linkage
+    from scipy.spatial.distance import squareform
+
+    factors, features = reason_columns(rm, list(Xtr.columns))
+    n_groups = n_groups or len(factors)
+    num = pd.DataFrame({c: (Xtr[c].cat.codes if hasattr(Xtr[c], "cat") else Xtr[c]) for c in features})
+    rho = num.corr(method="spearman").fillna(0).to_numpy()
+    dist = 1 - np.abs(rho)
+    np.fill_diagonal(dist, 0)
+    labels = fcluster(linkage(squareform(dist, checks=False), "average"), n_groups, "maxclust")
+    return {f"corr_{k}": [f for f, l in zip(features, labels) if l == k] for k in sorted(set(labels))}
+
+
+def run_extended(rm, Xtr, ytr, Xev, n_refits=100, n_random=50, seed=REFIT_SEED):
+    """Robustness version of RQ3: more refits, many random partitions, a
+    correlation-based partition, and the main factor with market context kept."""
+    cols = list(Xtr.columns)
+    factors, features = reason_columns(rm, cols)
+    all_factors = list(rm.factors)
+    partitions = [random_partition(rm, cols, seed + k) for k in range(n_random)]
+    corr = correlation_partition(rm, Xtr)
+    specs = {"lgbm_structured": dict(interaction_groups=rm.interaction_groups(cols),
+                                     monotone=rm.monotone_vector(cols)),
+             "lgbm_unconstrained": dict()}
+    rng = np.random.default_rng(seed)
+    keys = [(m, l) for m in specs for l in ["factor", "feature", "factor_with_market", "correlation"]]
+    keys += [("lgbm_unconstrained", f"random_{k}") for k in range(n_random)]
+    tops = {k: [] for k in keys}
+    gap_sum = np.zeros(len(Xev))
+    for _ in range(n_refits):
+        idx = rng.integers(0, len(Xtr), len(Xtr))
+        Xb, yb = Xtr.iloc[idx].reset_index(drop=True), ytr[idx]
+        for name, kw in specs.items():
+            model = models.fit(Xb, yb, **kw)
+            fac, feat, _, _ = records.factor_contributions(model, Xev, rm)
+            tops[(name, "factor")].append(_top(fac[factors]))
+            tops[(name, "feature")].append(_top(feat[features]))
+            tops[(name, "factor_with_market")].append(_top(fac[all_factors]))
+            cdf = pd.DataFrame({g: feat[fs].sum(axis=1) for g, fs in corr.items()})
+            tops[(name, "correlation")].append(_top(cdf))
+            if name == "lgbm_structured":
+                srt = np.sort(fac[factors].to_numpy(), axis=1)
+                gap_sum += srt[:, -1] - srt[:, -2]
+            else:
+                for k, groups in enumerate(partitions):
+                    rand = pd.DataFrame({g: feat[fs].sum(axis=1) for g, fs in groups.items()})
+                    tops[(name, f"random_{k}")].append(_top(rand))
+    agreement = {k: _agreement(np.vstack(v)) for k, v in tops.items()}
+    return agreement, gap_sum / n_refits, corr
