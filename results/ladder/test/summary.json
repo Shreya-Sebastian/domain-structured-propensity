@@ -1,0 +1,24 @@
+{
+  "block": "test",
+  "rows": 2058,
+  "yes_rate": 0.5214,
+  "directions": {
+    "prev_success": "increasing"
+  },
+  "trees_mixing_factors": {
+    "lgbm_unconstrained": 300,
+    "lgbm_directions": 300,
+    "lgbm_structured": 0
+  },
+  "sanity_max_abs_gap_factor_sum_vs_score": 7.549516567451064e-15,
+  "fit_seconds": {
+    "rule_baseline": 0.0,
+    "logistic": 0.1,
+    "lgbm_unconstrained": 0.7,
+    "lgbm_directions": 0.7,
+    "lgbm_structured": 0.7,
+    "ebm_unconstrained": 22.3,
+    "ebm_structured": 12.2,
+    "stability": 80.2
+  }
+}

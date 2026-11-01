@@ -1,0 +1,31 @@
+model,group_by,group,clients,selection_rate_top10,precision_in_top10
+lgbm_structured,age_band,30 to 59,1218,0.0583,0.7746
+lgbm_structured,age_band,60 and over,345,0.229,0.6835
+lgbm_structured,age_band,under 30,495,0.1152,0.5965
+lgbm_structured,job,admin.,641,0.064,0.7073
+lgbm_structured,job,technician,317,0.0883,0.8214
+lgbm_structured,job,blue-collar,136,0.0441,0.5
+lgbm_structured,job,retired,274,0.2409,0.697
+lgbm_structured,job,unknown,18,0.1667,0.0
+lgbm_structured,job,student,209,0.177,0.6486
+lgbm_structured,job,services,123,0.0488,0.6667
+lgbm_structured,job,management,120,0.0333,1.0
+lgbm_structured,job,unemployed,86,0.1047,0.5556
+lgbm_structured,job,entrepreneur,26,0.0385,1.0
+lgbm_structured,job,self-employed,53,0.0377,0.0
+lgbm_structured,job,housemaid,55,0.0727,1.0
+lgbm_unconstrained,age_band,30 to 59,1218,0.124,0.6887
+lgbm_unconstrained,age_band,60 and over,345,0.0377,0.6923
+lgbm_unconstrained,age_band,under 30,495,0.0848,0.6429
+lgbm_unconstrained,job,admin.,641,0.1232,0.6329
+lgbm_unconstrained,job,technician,317,0.164,0.8077
+lgbm_unconstrained,job,blue-collar,136,0.0588,0.625
+lgbm_unconstrained,job,retired,274,0.0219,0.8333
+lgbm_unconstrained,job,unknown,18,0.0556,0.0
+lgbm_unconstrained,job,student,209,0.1005,0.619
+lgbm_unconstrained,job,services,123,0.122,0.4667
+lgbm_unconstrained,job,management,120,0.0583,0.8571
+lgbm_unconstrained,job,unemployed,86,0.093,0.75
+lgbm_unconstrained,job,entrepreneur,26,0.0769,0.5
+lgbm_unconstrained,job,self-employed,53,0.0566,0.3333
+lgbm_unconstrained,job,housemaid,55,0.0727,1.0

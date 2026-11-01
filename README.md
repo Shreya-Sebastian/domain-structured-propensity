@@ -2,7 +2,16 @@
 
 A feasibility study on public bank data: what does it cost to make a propensity model follow a written reasoning model, and what do you get back? What you get back is reasons that are separate by factor: each factor's share of a client's score depends only on that factor's own facts. The reasons are computed, never generated, and can be checked.
 
-**Status:** demo built; phase 0 (evidence for the reasoning model) done; full model ladder run on the pilot (validation) months only. Hypotheses are drafted in `hypotheses.md` and not yet committed, so the test block has not been scored.
+**Status:** done for the core questions. Phase 0 (evidence for the reasoning model), the model ladder, separation and stability tests are built; the hypotheses were committed (`f7ac82a`) before the 2010 test months were scored once. Full results: `docs/test_results.md`.
+
+## Results in short (2010 test months, 2,058 clients)
+
+- **Factor grouping cost no accuracy.** Primary hypothesis (H1b, margin 0.02 AUC): structured minus directions-only LightGBM +0.016 [−0.004, +0.036], so non-inferior. The EBMs agree (+0.016 [+0.001, +0.032]). The whole structure against the unconstrained LightGBM: +0.024 [+0.003, +0.045].
+- **A simple rule did as well as the best model:** previous success first, then most recent contact (AUC 0.666, best precision in the top 10%). Under strong drift (6.7% yes in training, 52% in test), the client's own history carries most of the signal.
+- **Reasons are steadier by factor:** across 30 refits, the structured model's main factor stayed the same for 82% of clients against 68% for the main single feature (+0.135 [+0.128, +0.143]); domain factors beat random groups of the same sizes by +0.056 [+0.050, +0.061].
+- **Separation holds:** in the structured model, changing one factor's facts never moved another factor's share; in unconstrained models it did for 81% to 100% of clients.
+- **Life stage is not needed:** dropping it raised AUC by +0.010 [+0.001, +0.020], and with it the structured model selected far more clients aged 60 and over (22.9% against 3.8%) at similar precision.
+- **Probabilities need recalibration** on recent months (ECE 0.06 to 0.18 for every model).
 
 ## What the demo shows
 
@@ -34,9 +43,9 @@ Fixed in `config/splits.yaml` before any model was fitted:
 | Train | 2008-05 to 2009-05 | 36,224 | 6.7% |
 | Calibration | 2009-06 to 2009-08 | 1,663 | 35.7% |
 | Pilot | 2009-09 to 2009-12 | 1,243 | 43.6% |
-| Test | 2010-03 to 2010-11 | 2,058 | not looked at |
+| Test | 2010-03 to 2010-11 | 2,058 | 52.1% |
 
-The test block is never scored by the demo.
+The test block was scored once, after the hypotheses were committed. The demo never scores it.
 
 ## Demo results
 
@@ -64,9 +73,9 @@ The factor-grouped model is not worse on these months, and is slightly ahead. Th
 
 Example briefs for three clients chosen by rule (top-ranked, at the top-10% boundary, median) are in `results/demo/briefs.md`, their records in `results/demo/records/`.
 
-## Model ladder (pilot months only)
+## Model ladder
 
-`scripts/run_ladder.py` fits every model in the study with fixed settings, calibrates on the calibration months and evaluates on one block, with paired bootstrap intervals and directional tests. On the pilot months (1,243 clients) the structured LightGBM is not worse than the unconstrained one (AUC 0.629 against 0.605; difference +0.023, interval −0.015 to +0.061). Details and caveats: `docs/pilot_results.md`. The test block is refused until `hypotheses.md` is committed.
+`scripts/run_ladder.py` fits every model in the study with fixed settings, calibrates on the calibration months and evaluates on one block: paired bootstrap intervals, directional tests, the separation test and the stability test (30 bootstrap refits). Pilot-month results, used only to check the code: `docs/pilot_results.md`. Test-month results: `docs/test_results.md`. The script refuses the test block unless `hypotheses.md` is committed and unchanged.
 
 ## Run it
 
@@ -75,6 +84,7 @@ py -3 -m venv .venv
 .venv/Scripts/python -m pip install -r requirements.txt
 .venv/Scripts/python scripts/run_demo.py
 .venv/Scripts/python scripts/run_ladder.py --block pilot
+.venv/Scripts/python scripts/run_ladder.py --block test
 .venv/Scripts/python -m pytest -q
 ```
 
@@ -82,10 +92,11 @@ py -3 -m venv .venv
 
 - The factors encode assumptions, not causes. The model can be shown to follow them, not that they drive uptake.
 - Factor shares are relative to the average training client; they describe the model, not the client's motives. Separation holds for the factor-grouped model only.
-- Within the pilot and test months the market indicators take values the training months never reached, so neither model can tell those months apart: the market-context share is the same for every client in a period.
+- In the pilot months the market indicators take values the training months never reached, so the market-context share is the same for every client there. In the 2010 test months they vary and the share differs between clients, but it still mostly reflects the period and the bank's own strategy, not the client.
 - Not a bank's own data or system; one product, one country, 2008 to 2010; no client id, so a client can repeat across campaigns.
 - Probabilities are calibrated on 2009-06 to 2009-08 and applied to later months, while the yes-rate keeps rising.
+- One test block, fixed rather than tuned settings: a tuned unconstrained model might close the gap.
 
 ## Next
 
-Review and commit `hypotheses.md`, then score the test block once. After that: stability of factor-level against feature-level reasons (RQ3) and validity over time (RQ4).
+Validity over time (RQ4: rolling refits and counterfactuals), a version without the life-stage factor as the default, and the planned RAG layer that may only retrieve and phrase computed reasons (not built).
