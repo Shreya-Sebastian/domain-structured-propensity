@@ -6,7 +6,7 @@ A feasibility study on public bank data: what does it cost to make a propensity 
 
 ## Results in short (2010 test months, 2,058 clients)
 
-- **Factor grouping cost no accuracy.** Primary hypothesis (H1b, margin 0.02 AUC): structured minus directions-only LightGBM +0.016 [−0.004, +0.036], so non-inferior. The EBMs agree (+0.016 [+0.001, +0.032]). The whole structure against the unconstrained LightGBM: +0.024 [+0.003, +0.045].
+- **With the fixed, pre-registered settings, factor grouping cost no measurable accuracy.** Primary hypothesis (H1b, margin 0.02 AUC): structured minus directions-only LightGBM +0.016 [−0.004, +0.036], so non-inferior. The EBMs agree (+0.016 [+0.001, +0.032]). The whole structure against the unconstrained LightGBM: +0.024 [+0.003, +0.045].
 - **A simple rule did as well as the best model:** previous success first, then most recent contact (AUC 0.666, best precision in the top 10%). Under strong drift (6.7% yes in training, 52% in test), the client's own history carries most of the signal.
 - **Reasons are steadier by factor:** across 30 refits, the structured model's main factor stayed the same for 82% of clients against 68% for the main single feature (+0.135 [+0.128, +0.143]); domain factors beat random groups of the same sizes by +0.056 [+0.050, +0.061].
 - **Separation holds:** in the structured model, changing one factor's facts never moved another factor's share; in unconstrained models it did for 81% to 100% of clients.
@@ -17,7 +17,7 @@ A feasibility study on public bank data: what does it cost to make a propensity 
 
 Every design decision was checked against primary sources afterwards (`docs/robustness.md`): 27 of 47 supported, 18 partly, 2 wrong or unsupported. The checks are reported next to the pre-registered result, not in its place. The main changes to the story:
 
-- **Tuning matters.** Across 30 shared settings the structured model stayed between 0.628 and 0.651 AUC while the directions-only model ranged from 0.561 to 0.669; the best-tuned less constrained model beat the structured one by about 0.02. So structure costs little or nothing depending on tuning, and its clear benefit is much lower sensitivity to settings.
+- **Tuning matters.** Across 30 shared settings the structured model stayed between 0.628 and 0.651 AUC while the directions-only model ranged from 0.561 to 0.669; with each model's settings chosen on the pilot months, the structured model was behind by 0.034 [−0.049, −0.020] (best against best on the test months: 0.019, which picks settings on the test block and so flatters both). So structure costs no measurable accuracy with fixed settings and about 0.03 AUC with proper tuning, and its clear benefit is much lower sensitivity to settings.
 - **`pdays = 999` does not mean never contacted** (4,110 counter-examples); `contacted_before` really means "has a recorded contact date". Fixing it changed no tree.
 - **Market context hurts:** every test client is outside its training range; without it the structured model reached 0.677.
 - **Dropping life stage** evens out selection by age.

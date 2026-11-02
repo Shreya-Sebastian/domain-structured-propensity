@@ -12,7 +12,7 @@ Scripts: `scripts/run_robustness.py`, `scripts/run_robustness_models.py`, `scrip
 
 ## What the checks found
 
-1. **Settings matter most.** Across 30 random settings shared by both models, the structured model's test AUC stayed between 0.628 and 0.651; the directions-only model's ranged from 0.561 to 0.669. Structured was ahead in 23 of 30 (median +0.023). With each model's setting chosen on the pilot months, structured was behind by 0.034 [−0.049, −0.020]. The best less constrained setting beat the best structured one by 0.019. With LightGBM's library defaults, structured was ahead by 0.068 [+0.046, +0.091]. Reading: factor grouping acts as strong regularisation; the cost is between 0 and about 0.02 AUC depending on tuning, and the benefit is much lower sensitivity to settings.
+1. **Settings matter most.** Across 30 random settings shared by both models, the structured model's test AUC stayed between 0.628 and 0.651; the directions-only model's ranged from 0.561 to 0.669. Structured was ahead in 23 of 30 (median +0.023). With each model's setting chosen on the pilot months, structured was behind by 0.034 [−0.049, −0.020]. The best less constrained setting beat the best structured one by 0.019. With LightGBM's library defaults, structured was ahead by 0.068 [+0.046, +0.091]. Reading: factor grouping acts as strong regularisation. With fixed settings there is no measurable cost; with each model tuned properly on the pilot months the cost is about 0.03 AUC (0.034 [−0.049, −0.020]). The 0.019 best-against-best gap chooses settings on the test block, so it understates the fair comparison. The benefit is much lower sensitivity to settings.
 2. **Data fixes support the result.** Dropping 12 duplicates, removing `contact` (a last-call attribute), lagging the market indicators by one month, removing them, or all fixes together: the structured model stayed ahead of the directions-only model in every case (+0.013 to +0.108).
 3. **Market context hurts every model.** Every test client's Euribor and employment level lies outside the training range. Without the market factor, all LightGBM models improved; structured reached 0.677, above the rule baseline (0.666).
 4. **The pdays fix changed no tree** (`previous` carries the same information) but lowered the rule baseline from 0.666 to 0.639.
@@ -29,7 +29,7 @@ Scripts: `scripts/run_robustness.py`, `scripts/run_robustness_models.py`, `scrip
 | --- | --- |
 | `contacted_before` described as "contacted before" | "has a recorded contact date"; use `previous > 0` as the contact flag |
 | Separation test presented as a finding | A check that the code builds what the design says (separation holds by construction) |
-| "Structure costs nothing" | "Little or no cost, much less sensitive to settings" |
+| "Structure costs nothing" | "No measurable cost with fixed settings; about 0.03 AUC with proper tuning; much less sensitive to settings" |
 | Life stage in the default model | Drop it |
 | Market context in the model | Drop or lag it |
 | Calibrate once on mid-2009 | Recalibrate on the most recent months |
